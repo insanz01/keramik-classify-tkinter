@@ -198,7 +198,7 @@ def classify():
 		X = np.expand_dims(data, axis=0)
 		print(X.shape)
 
-		checkpoint_filepath = join(root_path, 'keramik_model3.h5')
+		checkpoint_filepath = join(root_path, 'keramik_model.h5')
 		main_model.load_weights(checkpoint_filepath)
 
 		prediction_scores = main_model.predict(X_batch)
