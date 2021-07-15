@@ -1,0 +1,1 @@
+## Tambahkan file keramik_model.h5 ke dalam folder ini
