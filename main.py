@@ -49,9 +49,9 @@ class MODEL(Enum):
 
 # select model to use
 opt_model = MODEL.TF_VGG16
-#opt_model = MODEL.TF_ResNet50
-#opt_model = MODEL.TF_InceptionV3 #menggunakan transfer learning model inception v3
-#opt_model = MODEL.TF_InceptionResNetV2
+# opt_model = MODEL.TF_ResNet50
+# opt_model = MODEL.TF_InceptionV3 #menggunakan transfer learning model inception v3
+# opt_model = MODEL.TF_InceptionResNetV2
 # opt_model = MODEL.TF_MobileNetV2
 
 # define rescale normalization
@@ -198,7 +198,6 @@ def classify():
 	global data, main_model, class_name
 	try:
 		result_text.set('Please wait...	')
-		# print(data.shape)
 
 		X = np.expand_dims(data, axis=0)
 		# print(X.shape)
