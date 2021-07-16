@@ -34,9 +34,9 @@ from tensorflow.keras.layers import Flatten, GlobalAveragePooling2D, MaxPooling2
 from tensorflow.keras.layers import Add, Concatenate
 from tensorflow.keras.optimizers import Adam
 
-from enum import Enum #impor libraru enum berfungsi sebagai alias pengganti nilai variabel
+from enum import Enum #impor library enum berfungsi sebagai alias pengganti nilai variabel
 
-class_name = ['granit','limestone','marmer','motif','mozaik','teraso']
+class_name = ['Granit','Limestone','Marmer','Motif','Mozaik','Teraso']
 K_class = len(class_name)
 
 #mendeklarasikan class Model dengan input enum
@@ -195,7 +195,7 @@ root_path = "model/"
 data = list()
 
 def classify():
-	global data, main_model
+	global data, main_model, class_name
 	try:
 		result_text.set('Please wait...	')
 		# print(data.shape)
@@ -216,18 +216,20 @@ def classify():
 		print(prediction_scores)
 		print(np.max(prediction_scores) * 100)
 
-		if score == 0:
-			result_text.set('Granit')
-		elif score == 1:
-			result_text.set('Limestone')
-		elif score == 2:
-			result_text.set('Marmer')
-		elif score == 3:
-			result_text.set('Motif')
-		elif score == 4:
-			result_text.set('Mozaik')
-		elif score == 5:
-			result_text.set('Teraso')
+		# if score == 0:
+		# 	result_text.set('Granit')
+		# elif score == 1:
+		# 	result_text.set('Limestone')
+		# elif score == 2:
+		# 	result_text.set('Marmer')
+		# elif score == 3:
+		# 	result_text.set('Motif')
+		# elif score == 4:
+		# 	result_text.set('Mozaik')
+		# elif score == 5:
+		# 	result_text.set('Teraso')
+
+		result_text.set(class_name[score])
 
 	except Exception as e:
 		result_text.set("Error to classification")
