@@ -48,9 +48,9 @@ class MODEL(Enum):
 	TF_MobileNetV2 = 5
 
 # select model to use
-#opt_model = MODEL.TF_VGG16
+opt_model = MODEL.TF_VGG16
 #opt_model = MODEL.TF_ResNet50
-opt_model = MODEL.TF_InceptionV3 #menggunakan transfer learning model inception v3
+#opt_model = MODEL.TF_InceptionV3 #menggunakan transfer learning model inception v3
 #opt_model = MODEL.TF_InceptionResNetV2
 # opt_model = MODEL.TF_MobileNetV2
 
@@ -157,6 +157,8 @@ def build_mobilenetV2_tf(input_layer, input_size, K): #setup untuk model mobilen
 # input layer
 inputs = Input(shape=input_size)
 
+global main_model
+
 # select model from the list of pre-trained models
 if opt_model == MODEL.TF_VGG16: #jika opsi yang dipilih model dari vgg16
 	input_model = tf.keras.applications.vgg16.preprocess_input(inputs) #load pre-trained model dari vgg16
@@ -174,13 +176,15 @@ elif opt_model == MODEL.TF_MobileNetV2: #jika opsi yang dipilih model dari mobil
 	input_model = tf.keras.applications.mobilenet_v2.preprocess_input(inputs) #load pre-trained model dari mobilenet v2
 	main_model = build_mobilenetV2_tf(input_model, input_size, K_class) #load model yang telah dideklarasikan di atas
 
-# build final model
-main_model = Model(inputs=inputs, outputs=main_model, name='Ceramic_model') #membuat model yang akan digunakan, dan menamakan dengan ceramic_model
+def build_model():
+	global main_model
+	# build final model
+	main_model = Model(inputs=inputs, outputs=main_model, name='Ceramic_model') #membuat model yang akan digunakan, dan menamakan dengan ceramic_model
 
-# initialize the optimizer and compile the model
-init_learning_rate = 1e-4 #membuat learning rate 0.0001
-opt_optimizer = Adam(learning_rate=init_learning_rate) #membuat optimizer menggunakan adam
-main_model.compile(optimizer=opt_optimizer, loss='sparse_categorical_crossentropy', loss_weights=1.0, metrics=['accuracy']) #kompilasi learning rate dan optimizer adam
+	# initialize the optimizer and compile the model
+	init_learning_rate = 1e-4 #membuat learning rate 0.0001
+	opt_optimizer = Adam(learning_rate=init_learning_rate) #membuat optimizer menggunakan adam
+	main_model.compile(optimizer=opt_optimizer, loss='sparse_categorical_crossentropy', loss_weights=1.0, metrics=['accuracy']) #kompilasi learning rate dan optimizer adam
 
 # ==============================================
 # TKINTER APP
@@ -191,20 +195,25 @@ root_path = "model/"
 data = list()
 
 def classify():
+	global data, main_model
 	try:
 		result_text.set('Please wait...	')
-		print(data.shape)
+		# print(data.shape)
 
 		X = np.expand_dims(data, axis=0)
-		print(X.shape)
+		# print(X.shape)
+		try:
+			build_model()
+		except:
+			print('model has been loaded')
 
 		checkpoint_filepath = join(root_path, 'keramik_model.h5')
 		main_model.load_weights(checkpoint_filepath)
 
-		prediction_scores = main_model.predict(X_batch)
+		prediction_scores = main_model.predict(X)
 		score = np.argmax(prediction_scores)
 
-		print(score)
+		print(prediction_scores)
 
 		if score == 0:
 			result_text.set('Granit')
@@ -218,12 +227,14 @@ def classify():
 			result_text.set('Mozaik')
 		elif score == 5:
 			result_text.set('Teraso')
-	except:
+	except Exception as e:
 		result_text.set("Error to classification")
 		print("Can't classify this image")
+		print(e)
 
 
 def load_image():
+	global data
 	fln = filedialog.askopenfilename(initialdir=os.getcwd(), title="Select Image File", filetypes=(("All Files", "*.*"), ("JPG File", "*.jpg"), ("PNG File", "*.png")))
 	try:
 		result_text.set('')
@@ -238,6 +249,7 @@ def load_image():
 	except:
 		result_text.set("Can't Load Image")
 		print("Can't Load Image File")
+
 
 root = Tk()
 
@@ -258,7 +270,7 @@ result.pack(side=tk.BOTTOM)
 browseBtn = Button(frm, text="Upload Gambar", command=load_image)
 browseBtn.pack(side=tk.LEFT)
 
-exitBtn = Button(frm, text="Cek Keramik", command=lambda: classify())
+exitBtn = Button(frm, text="Cek Keramik", command=classify)
 exitBtn.pack(side=tk.LEFT, padx=10)
 
 root.title("Keramik Classification")
