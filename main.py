@@ -214,6 +214,7 @@ def classify():
 		score = np.argmax(prediction_scores)
 
 		print(prediction_scores)
+		print(np.max(prediction_scores) * 100)
 
 		if score == 0:
 			result_text.set('Granit')
@@ -227,6 +228,7 @@ def classify():
 			result_text.set('Mozaik')
 		elif score == 5:
 			result_text.set('Teraso')
+
 	except Exception as e:
 		result_text.set("Error to classification")
 		print("Can't classify this image")
