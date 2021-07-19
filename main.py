@@ -263,6 +263,9 @@ root.iconphoto(False, icon)
 frm = Frame(root)
 frm.pack(side=BOTTOM, padx=15, pady=15)
 
+title = tk.Label(root, text='KLASIFIKASI KERAMIK', font="Raleway")
+title.pack(side=tk.TOP)
+
 lbl = Label(root)
 lbl.pack()
 
