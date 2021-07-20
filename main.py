@@ -264,7 +264,7 @@ frm = Frame(root)
 frm.pack(side=BOTTOM, padx=15, pady=15)
 
 title = tk.Label(root, text='KLASIFIKASI KERAMIK', font="Raleway")
-title.pack(side=tk.TOP)
+title.pack(side=tk.TOP, pady=15)
 
 lbl = Label(root)
 lbl.pack()
